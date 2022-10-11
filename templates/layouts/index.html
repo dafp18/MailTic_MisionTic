@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title> {% block title %} {% endblock title %} </title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.min.css') }}" rel="stylesheet">
+</head>
+
+<body> 
+
+    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full" data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+        
+        <header class="topbar" data-navbarbg="skin5">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header" data-logobg="skin5">
+                    <a class="navbar-brand" href="/" style="margin-left:20%">
+                        <h3>MailTic</h3>
+                    </a>
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                </div>
+                
+                <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+                    <ul class="navbar-nav float-start me-auto"></ul>
+                    <ul class="navbar-nav float-end">                       
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://fashion-jas.com/public/img/user.jpg" alt="user" class="rounded-circle" width="31">
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-user  me-1 ms-1"></i> Mi perfil</a>                                 
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-key  me-1 ms-1"></i> Cambiar contraseña</a>                                 
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-power-off me-1 ms-1"></i> Logout</a>                                 
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        
+        <aside class="left-sidebar" data-sidebarbg="skin5">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav" class="pt-4">
+                        <li class="sidebar-item"> 
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="./newMessage" aria-expanded="false">
+                                <i class="mdi mdi-tooltip-edit"></i>
+                                <span class="hide-menu">Mensaje nuevo</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item"> 
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="./messages" aria-expanded="false">
+                                <i class="mdi mdi-library-books"></i>
+                                <span class="hide-menu">Bandeja de entrada</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        
+        <div class="page-wrapper">
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title"> {{ title }} </h4>
+                        <div class="ms-auto text-end">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item active" aria-current="page">{{ route }}</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+               <div class="row">
+                {% block content %} {% endblock %}
+               </div>
+                          
+            </div>
+            
+            <footer class="footer text-center">
+                MailTic diseñada y desarrollada con ❤️
+            </footer>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/jquery/dist/jquery.min.js') }}"></script>  
+    <script src="{{ url_for('static', filename='js/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/extra-libs/sparkline/sparkline.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/waves.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sidebarmenu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/custom.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flot/excanvas.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot/jquery.flot.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot/jquery.flot.pie.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot/jquery.flot.time.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot/jquery.flot.stack.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot/jquery.flot.crosshair.js') }} "></script>
+    <script src="{{ url_for('static', filename='js/flot.tooltip/js/jquery.flot.tooltip.min.js') }} "></script>
+</body>
+
+</html>
