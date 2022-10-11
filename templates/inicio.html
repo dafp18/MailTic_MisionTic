@@ -67,24 +67,26 @@
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active" id="SignIn" role="tabpanel">
                                 <div class="p-20">
-                                    <form class="form-horizontal mt-3" id="loginform" action="index.html">
+                                    <form class="form-horizontal mt-3" id="loginform" action="" method="post" novalidate>
+                                        {{ formLogin.hidden_tag() }}
                                         <div class="row pb-4">
                                             <div class="col-12">
-                                                <label for="email1" class="text-end control-label col-form-label">Correo electrónico</label><br>
+                                                {{ formLogin.email.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
-                                                    
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="ti-user"></i></span>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-lg" placeholder="jhon.doe@uninorte.edu.co" required="">
+                                                    {{ formLogin.email(class="form-control form-control-lg", placeholder="jhon.doe@uninorte.edu.co") }}
                                                 </div>
-                                                <label for="email1" class="text-end control-label col-form-label">Contraseña</label><br>
+                                                {{ formLogin.password.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="ti-pencil"></i></span>
                                                     </div>
-                                                    <input type="password" class="form-control form-control-lg" placeholder="***********" required="">
+                                                    {{ formLogin.password(class="form-control form-control-lg", placeholder="***************") }}
                                                 </div>
+
+                                                {{ formLogin.remember(class="form-check-input") }}  {{ formLogin.remember.label }} 
                                             </div>
                                         </div>
                                         <div class="row border-top border-secondary">
@@ -92,9 +94,7 @@
                                                 <div class="form-group">
                                                     <div class="pt-3">
                                                         <button class="btn btn-info" id="to-recover" type="button"><i class="fa fa-lock me-1"></i> Olvido su contraseña?</button>
-                                                        <a href="./welcome">
-                                                            <button class="btn btn-success float-end text-white" type="button">Iniciar sesión</button>
-                                                        </a>
+                                                        {{ formLogin.submit(class="btn btn-success float-end text-white")  }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -106,36 +106,37 @@
                             <div class="tab-pane p-20" id="SignUp" role="tabpanel">
                                 <div class="p-20">
                                     <form class="form-horizontal mt-3">
+                                        {{ formRegister.hidden_tag() }}
                                         <div class="row pb-4">
                                             <div class="col-12">
-                                                <label for="email1" class="text-end control-label col-form-label">Nombres</label><br>
+                                                {{ formRegister.name.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-success text-white h-100" id="basic-addon1"><i class="ti-user"></i></span>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-lg" placeholder="Jhon Doe" required>
+                                                    {{ formRegister.name(class="form-control form-control-lg", placeholder="Jhon Doe") }}
                                                 </div>
                                                 <!-- email -->
-                                                <label for="email1" class="text-end control-label col-form-label">Correo electrónico</label><br>
+                                                {{ formRegister.email.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-danger text-white h-100" id="basic-addon1"><i class="ti-email"></i></span>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-lg" placeholder="jhon.doe@uninorte.edu.co" required>
+                                                    {{ formRegister.email(class="form-control form-control-lg", placeholder="jhon.doe@uninorte.edu.co") }}
                                                 </div>
-                                                <label for="email1" class="text-end control-label col-form-label">Contraseña</label><br>
+                                                {{ formRegister.password.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-warning text-white h-100" id="basic-addon2"><i class="ti-pencil"></i></span>
                                                     </div>
-                                                    <input type="password" class="form-control form-control-lg" placeholder="********" required>
+                                                    {{ formRegister.password(class="form-control form-control-lg", placeholder="***********") }}
                                                 </div>
-                                                <label for="email1" class="text-end control-label col-form-label">Confirmar contraseña</label><br>
+                                                {{ formRegister.confirmPassword.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-info text-white h-100" id="basic-addon2"><i class="ti-pencil"></i></span>
                                                     </div>
-                                                    <input type="password" class="form-control form-control-lg" placeholder="********" required>
+                                                    {{ formRegister.confirmPassword(class="form-control form-control-lg", placeholder="***********") }}
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +144,7 @@
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <div class="pt-3 d-grid">
-                                                        <button class="btn btn-block btn btn-info" type="submit">Registrarse</button>
+                                                        {{ formRegister.submit(class="btn btn-block btn btn-info") }}
                                                     </div>
                                                 </div>
                                             </div>
