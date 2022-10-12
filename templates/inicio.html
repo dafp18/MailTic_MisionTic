@@ -121,7 +121,7 @@
 
                             <div class="tab-pane p-20" id="SignUp" role="tabpanel">
                                 <div class="p-20">
-                                    <form class="form-horizontal mt-3" id="registerform" method="POST" novalidate>
+                                    <form class="form-horizontal mt-3" id="registerform" action="{{ url_for('add_user') }}" method="POST" >
                                         {{ formRegister.hidden_tag() }}
                                         <div class="row pb-4">
                                             <div class="col-12">
