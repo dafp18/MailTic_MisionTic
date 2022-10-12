@@ -79,6 +79,13 @@
                                     <span class="hidden-xs-down">Registrarse</span>
                                 </a> 
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#RecoverPassword" role="tab">
+                                    <span class="hidden-sm-up"></span>
+                                    <span class="hidden-xs-down">Olvidó su contraseña?</span>
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content tabcontent-border">
                             <div class="tab-pane active" id="SignIn" role="tabpanel">
@@ -106,10 +113,9 @@
                                         </div>
                                         <div class="row border-top border-secondary">
                                             <div class="col-12">
-                                                <div class="form-group">
-                                                    <div class="pt-3">
-                                                        <button class="btn btn-info" id="to-recover" type="button"><i class="fa fa-lock me-1"></i> Olvido su contraseña?</button>
-                                                        {{ formLogin.submit(class="btn btn-success float-end text-white")  }}
+                                                <div class="form-group" style="margin-bottom: -10px;">
+                                                    <div class="pt-3 d-grid">
+                                                        <center> {{ formLogin.submit(class="btn btn-success text-white") }} </center>
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,6 +171,34 @@
                                             </div>
                                         </div>
                                     </form> 
+                                </div>
+                            </div>
+
+                            <div class="tab-pane" id="RecoverPassword" role="tabpanel">
+                                <div class="p-20">
+                                    <form class="form-horizontal mt-3" id="loginform" action="" method="post">
+                                        {{ formRecoverPassword.hidden_tag() }}
+                                        <div class="row pb-4">
+                                            <div class="col-12">
+                                                {{ formRecoverPassword.email.label(class="text-end control-label col-form-label") }}
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-info text-white h-100" id="basic-addon1"><i class="ti-email"></i></span>
+                                                    </div>
+                                                    {{ formRecoverPassword.email(class="form-control form-control-lg", placeholder="jhon.doe@uninorte.edu.co") }}
+                                                </div>                           
+                                            </div>
+                                        </div>
+                                        <div class="row border-top border-secondary">
+                                            <div class="col-12">
+                                                <div class="form-group" style="margin-bottom: -10px;">
+                                                    <div class="pt-3">
+                                                        <center>{{ formRecoverPassword.submitBtn(class="btn btn-success text-white") }}</center>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

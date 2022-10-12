@@ -5,6 +5,7 @@ import sqlite3 as sql
 import os
 import forms
 import utils
+import random
 
 
 SECRET_KEY = os.urandom(32)
@@ -20,6 +21,7 @@ def index():
     route = '/ Inicio'
     formRegister = forms.RegisterForm()
     formLogin = forms.LoginForm()
+    formRecoverPassword = forms.recoverPasswordForm()
 
     if(formLogin.validate_on_submit() and request.method == 'POST'):
         email = formLogin.email.data
@@ -46,8 +48,18 @@ def index():
             session.clear()
             session['user_id'] = user[0]
             return redirect(url_for('welcome'))
-        
-    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,colorAlert=colorAlert )    
+
+    if(formRecoverPassword.validate_on_submit()):
+        emailRecover = formRecoverPassword.email.data
+        colorAlert = "alert-success"
+        con=sql.connect('database/MailTicDatabase.db')
+        cur=con.cursor()
+        cur.execute('INSERT INTO recoverPassword ( email,code) values (?,?)', (emailRecover,random.randint(1000, 9999)))
+        con.commit()
+        print(emailRecover)
+        flash('Hemos enviado un enlace de recuperación al correo electrónico proporcionado')
+
+    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,formRecoverPassword=formRecoverPassword,colorAlert=colorAlert )    
     
 
 @app.route('/welcome')
@@ -65,7 +77,11 @@ def newMessage():
     route = '/ Mensaje nuevo'
     formMessage = forms.NewMessageForm()
     if 'user_id' in session:
-        return render_template('newMessage.html', title=title, route=route, formMessage=formMessage)
+        con=sql.connect('database/MailTicDatabase.db')
+        cur=con.cursor()
+        dirEmails = cur.execute('select distinct name, email from users').fetchall()
+        print(dirEmails)
+        return render_template('newMessage.html', title=title, route=route, formMessage=formMessage, dirEmails=dirEmails)
     else:
         return 'unAuthorized'
 
@@ -157,12 +173,6 @@ def delete_msg(idmsg):
         return redirect(url_for('messages'))
     else:
         return 'unAuthorized'
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return 'login'
-
 
 def login_reqeuired(view):
     @functools.wraps(view)

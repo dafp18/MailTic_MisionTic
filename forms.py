@@ -7,7 +7,7 @@ class LoginForm (FlaskForm):
     email = EmailField('Correo electrónico', validators=[DataRequired(message = 'Debe ingresar un correo electrónico válido')])
     password =PasswordField('Contraseña', validators=[DataRequired('Password incorrecto')])
     remember = BooleanField('Recordar usuario')
-    submit = SubmitField('Iniciar sesion')
+    submit = SubmitField('   Iniciar sesion    ')
 
 
 class RegisterForm (FlaskForm):
@@ -22,4 +22,9 @@ class NewMessageForm (FlaskForm):
     to = EmailField('Para', validators=[DataRequired(message = 'Debe ingresar un correo electrónico válido')])
     subject = StringField('Asunto', validators=[DataRequired(message = 'Debe ingresar un asunto')])
     message =TextAreaField('Mensaje')
-    submitBtn = SubmitField('Enviar mensaje')    
+    submitBtn = SubmitField('Enviar mensaje')
+
+
+class recoverPasswordForm (FlaskForm):
+    email = EmailField('Correo electrónico', validators=[DataRequired(message = 'Debe ingresar un correo electrónico válido')])
+    submitBtn = SubmitField('    Enviar correo    ')        

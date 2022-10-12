@@ -4,6 +4,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
+                <div class="alert alert-secondary" role="alert">
+                    Consulte el directorio de amigos para ver los usuarios registrados. Si escribe un destinatario que no esta en la lista no se podrá enviar su mensaje.
+                </div>
                 <div class="row">
                     <div class="col-md-8">
                         <form class="form-horizontal mt-3" id="messageform" action="createMessage" method="POST">
@@ -31,14 +34,49 @@
                         </form>
                     </div>
                     <div class="col-md-4">
-                        <center>
-                            <img src="{{ url_for('static', filename='img/img_new_message.svg') }}" alt="welcome" width="70%" style="margin-top: 10%; margin-bottom: 2%;">
-                        </center>
+                        <center><button type="button" class="btn btn-outline-dark btn-block" id="showBtn" style="margin-top: 5%;" onclick="showDirAmigos()">Ver directorio de amigos</button></center>
+                        <center><button type="button" class="btn btn-outline-dark btn-block" id="hiddenBtn" style="margin-top: 5%; display: none;" onclick="hiddenDirAmigos()">Ocultar directorio de amigos</button></center>
+                        <div id="imgDirectorioAmigos">
+                            <center><img src="{{ url_for('static', filename='img/img_new_message.svg') }}" alt="welcome" width="70%" style="margin-top: 10%; margin-bottom: 2%;" ></center>
+                        </div>
+                        <div id="directorioAmigos" style="display: none;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-0">Directorio de amigos</h4>
+                                </div>
+                            
+                                <div class="comment-widgets scrollable">
+                                    {% for email in dirEmails %}
+                                    <div class="d-flex flex-row comment-row mt-0" style="padding: 5px !important;">
+                                        <div class="p-2"><img src="{{ url_for('static', filename='img/img_user.svg') }}" alt="user" width="40"
+                                                class="rounded-circle"></div>
+                                        <div class="comment-text w-100">
+                                            <h6 class="font-medium"><strong>{{ email[0] }}</strong> </h6>
+                                            <span class="mb-3 d-block">{{ email[1] }}</span>
+                                        </div>
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
             </div>
         </div>
-
     </div>
+    <script>
+        function showDirAmigos() {
+            document.getElementById('imgDirectorioAmigos').style.display = 'none'
+            document.getElementById('showBtn').style.display = 'none'
+            document.getElementById('directorioAmigos').style.display = ''
+            document.getElementById('hiddenBtn').style.display = ''
+        }
+
+        function hiddenDirAmigos(params) {
+            document.getElementById('imgDirectorioAmigos').style.display = ''
+            document.getElementById('showBtn').style.display = ''
+            document.getElementById('directorioAmigos').style.display = 'none'
+            document.getElementById('hiddenBtn').style.display = 'none'
+        }
+    </script>
 {% endblock content%}
