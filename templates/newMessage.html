@@ -6,26 +6,29 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <label for="hue-demo">Para</label>
-                                <input type="text" id="hue-demo" class="form-control demo" data-control="hue">
+                        <form class="form-horizontal mt-3" id="messageform" action="createMessage" method="POST">
+                            {{ formMessage.hidden_tag() }}
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    {{ formMessage.to.label(class="text-end control-label col-form-label") }}
+                                    {{ formMessage.to(class="form-control demo") }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <label for="hue-demo">Asunto</label>
-                                <input type="text" id="hue-demo" class="form-control demo" data-control="hue">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    {{ formMessage.subject.label(class="text-end control-label col-form-label") }}
+                                    {{ formMessage.subject(class="form-control demo") }}
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <label for="hue-demo">Mensaje</label>
-                                <textarea  rows="10" class="form-control"></textarea>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    {{ formMessage.message.label(class="text-end control-label col-form-label") }}
+                                    {{ formMessage.message(class="form-control demo", rows="10") }}
+                                </div>
                             </div>
-                        </div>                          
-                        <button type="button" class="btn btn-dark text-white">Enviar mensaje</button>
+                            {{ formMessage.submitBtn(class="btn btn-dark text-white") }}
+                        </form>
                     </div>
                     <div class="col-md-4">
                         <center>

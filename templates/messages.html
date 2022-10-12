@@ -6,59 +6,84 @@
             <div class="card-body">
                 <div class="comment-widgets scrollable">
                     <!-- Comment Row -->
-                    <div class="d-flex flex-row comment-row mt-0" style="padding: 0 !important">
+                    {% for msg in messages %}
+                    <div class="d-flex flex-row comment-row mt-0" style="padding: 0 !important" onclick="leerMessage('{{ msg[0] }}','{{ msg[1] }}','{{ msg[5] }}','{{ msg[3] }}','{{ msg[6] }}','{{ msg[2] }}')">
                         <div class="comment-text w-100">
-                            <h6 class="font-medium"><strong>James Anderson</strong><i class="me-2 mdi mdi-email-outline float-end" style="font-size: 22px; margin-top: -6px;"></i></h6>
-                            <span class="mb-3 d-block"><strong>Lorem Ipsum is simply dummy text of the...</strong></span>
+                            <h6 class="font-medium">
+                                <strong class="notRead_{{ msg[0] }}">{{ msg[5] }} </strong>
+                                <p class="read_{{ msg[0] }}" style="display:none">{{ msg[5] }}</p>
+                                <i class="me-2 mdi mdi-email-outline float-end notRead_{{ msg[0] }}" style="font-size: 22px; margin-top: -6px;"></i>
+                            </h6>
+                            <span class="mb-3 d-block">
+                                <strong class="notRead_{{ msg[0] }}">{{ msg[2] }}...</strong>
+                                <p class="read_{{ msg[0] }}" style="display:none">{{ msg[2] }}...</p>
+                            </span>
                             <div class="comment-footer">
-                                <span class="text-muted float-end">April 14, 2021</span>
-                                <button type="button" class="btn btn-cyan btn-sm text-white"><i class="fa fa-check me-1"></i> Leido</button>
-                                <button type="button" class="btn btn-danger btn-sm text-white"><i class="fa fa-trash-alt me-1"></i> Eliminar</button>
+                                <span class="text-muted float-end">{{ msg[3] }}</span>
+                                <button type="button" class="btn btn-cyan btn-sm text-white" id="btn_leido_msg_{{ msg[0] }}" ><i class="fa fa-check me-1"></i> Leido</button>
+                                <a href="/delete_msg/{{ msg[0] }}"><button type="button" class="btn btn-danger btn-sm text-white"><i class="fa fa-trash-alt me-1"></i> Eliminar</button></a>
                             </div>
                         </div>
                     </div>
                     <hr>
-                    <div class="d-flex flex-row comment-row mt-0" style="padding: 0 !important">
-                        <div class="comment-text w-100">
-                            <h6 class="font-medium">James Anderson <i class="me-2 mdi mdi-email-open-outline float-end" style="font-size: 22px; margin-top: -6px;"></i></h6>
-                            <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the... </span>
-                            <div class="comment-footer">
-                                <span class="text-muted float-end">April 14, 2021</span>
-                                <button type="button" class="btn btn-cyan btn-sm text-white"><i class="fa fa-check me-1"></i> Leido</button>
-                                <button type="button" class="btn btn-danger btn-sm text-white"><i class="fa fa-trash-alt me-1"></i> Eliminar</button>
-                                
-                            </div>
-                        </div>
-                    </div>
+                    {%endfor%}
+                    
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-9">
         <div class="card">
-            <div class="card-body">
-                <h3>Mensaje de prueba</h3>
-                <hr>
-                <div class="comment-widgets scrollable">
-                    <div class="d-flex flex-row comment-row mt-0">
-                        <div class="p-2">
-                            <img src="{{ url_for('static', filename='img/img_user.svg') }}" alt="user" width="50" class="rounded-circle"></div>
-                        <div class="comment-text w-100">
-                            <h5 class="font-medium">Diego Forero <span class="text-muted float-end"><i class="me-2 mdi mdi-clock float-end" style="font-size: 12px;"> 06 / Nov / 2021 03:00 pm</i></span></h5>
-                            <span class="mb-3 d-block">diego.forero@uninorte.edu.co</span>
+                <div class="card-body">
+                    <div id="imgDetailMessage">
+                        <h3 id="bodyMsg_subject">Ningún mensaje seleccionado</h3>
+                        <hr>
+                        <div>
+                            <center> <img src="{{ url_for('static', filename='img/img_read_message.svg') }}" alt="mail" style="margin-top: 5%; margin-bottom:1%"> </center>
+                        </div>
+                    </div>
+                    <div id="showDetailMessage" style="display: none;">
+                        <h3 id="bodyMsg_subject"></h3>
+                        <hr>
+                        <div class="comment-widgets scrollable">
+                            <div class="d-flex flex-row comment-row mt-0">
+                                <div class="p-2">
+                                    <img src="{{ url_for('static', filename='img/img_user.svg') }}" alt="user" width="50" class="rounded-circle"></div>
+                                <div class="comment-text w-100">
+                                    <h5 class="font-medium" id="bodyMsg_name"></h5>
+                                    <span class="text-muted float-end"><i class="me-2 mdi mdi-clock float-end" style="font-size: 12px;" id="bodyMsg_date"> </i></span>
+                                    <span class="mb-3 d-block" id="bodyMsg_email"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <p id="bodyMsg_msg"></p>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, commodi odio in quasi,
-                     omnis quidem similique corporis doloremque ullam necessitatibus tempora aperiam? Magni corrupti eaque alias aut sint? Eligendi, fuga.
-                     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, commodi odio in quasi, omnis
-                     quidem similique corporis doloremque ullam necessitatibus tempora aperiam? Magni corrupti eaque alias aut sint? Eligendi, fuga.
-                    </p>
-                    
-                </div>
-            </div>
         </div>
 
     </div>
+
+    <script>
+        function leerMessage(id,subject, name, date, email, msg){
+            document.getElementById('bodyMsg_subject').innerHTML = subject
+            document.getElementById('bodyMsg_name').innerHTML = name
+            document.getElementById('bodyMsg_date').innerHTML = date
+            document.getElementById('bodyMsg_email').innerHTML = email
+            document.getElementById('bodyMsg_msg').innerHTML = msg
+            document.getElementById('btn_leido_msg_'+id).disabled = 'true'
+            document.getElementById('showDetailMessage').style.display = ''
+            document.getElementById('imgDetailMessage').style.display= 'none'
+
+            document.querySelectorAll('.notRead_'+id).forEach(el =>  {
+                el.style.display = 'none'
+            })
+
+            document.querySelectorAll('.read_' + id).forEach(el => {
+                el.style.display = ''
+            })   
+        }
+
+    </script>
 {% endblock content%}
