@@ -176,16 +176,16 @@
 
                             <div class="tab-pane" id="RecoverPassword" role="tabpanel">
                                 <div class="p-20">
-                                    <form class="form-horizontal mt-3" id="loginform" action="" method="post">
-                                        {{ formRecoverPassword.hidden_tag() }}
+                                    <form class="form-horizontal mt-3" id="loginform" action="forgotPassword" method="post">
+                                        {{ forgotPasswordForm.hidden_tag() }}
                                         <div class="row pb-4">
                                             <div class="col-12">
-                                                {{ formRecoverPassword.email.label(class="text-end control-label col-form-label") }}
+                                                {{ forgotPasswordForm.email.label(class="text-end control-label col-form-label") }}
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text bg-info text-white h-100" id="basic-addon1"><i class="ti-email"></i></span>
                                                     </div>
-                                                    {{ formRecoverPassword.email(class="form-control form-control-lg", placeholder="jhon.doe@uninorte.edu.co") }}
+                                                    {{ forgotPasswordForm.email(class="form-control form-control-lg", placeholder="jhon.doe@uninorte.edu.co") }}
                                                 </div>                           
                                             </div>
                                         </div>
@@ -193,7 +193,7 @@
                                             <div class="col-12">
                                                 <div class="form-group" style="margin-bottom: -10px;">
                                                     <div class="pt-3">
-                                                        <center>{{ formRecoverPassword.submitBtn(class="btn btn-success text-white") }}</center>
+                                                        <center>{{ forgotPasswordForm.submitBtn(class="btn btn-success text-white") }}</center>
                                                     </div>
                                                 </div>
                                             </div>

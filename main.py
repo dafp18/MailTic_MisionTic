@@ -1,5 +1,5 @@
 import functools
-from flask import Flask,request,render_template,flash, redirect, url_for, g, make_response, session
+from flask import Flask,request,render_template,flash, redirect, url_for, g, make_response, session, Markup
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3 as sql
 import os
@@ -14,15 +14,15 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/', methods=['GET','POST'], endpoint='login')
 def index():
     colorAlert = "alert-danger"
     title='Inicio'
     route = '/ Inicio'
     formRegister = forms.RegisterForm()
     formLogin = forms.LoginForm()
-    formRecoverPassword = forms.recoverPasswordForm()
-
+    forgotPasswordForm = forms.forgotPasswordForm()
+    
     if(formLogin.validate_on_submit() and request.method == 'POST'):
         email = formLogin.email.data
         password = formLogin.password.data
@@ -47,20 +47,63 @@ def index():
         else:
             session.clear()
             session['user_id'] = user[0]
-            return redirect(url_for('welcome'))
+            return redirect(url_for('welcome'))    
 
-    if(formRecoverPassword.validate_on_submit()):
-        emailRecover = formRecoverPassword.email.data
+    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert )    
+    
+
+@app.route('/forgotPassword', methods=['GET', 'POST'])
+def forgotPassword():
+    colorAlert = "alert-danger"
+    title='Inicio'
+    route = '/ Inicio'
+    formLogin = forms.LoginForm()
+    formRegister = forms.RegisterForm()
+    forgotPasswordForm = forms.forgotPasswordForm()
+    if(forgotPasswordForm.validate_on_submit()):
+        emailRecover = forgotPasswordForm.email.data
         colorAlert = "alert-success"
         con=sql.connect('database/MailTicDatabase.db')
         cur=con.cursor()
         cur.execute('INSERT INTO recoverPassword ( email,code) values (?,?)', (emailRecover,random.randint(1000, 9999)))
         con.commit()
-        print(emailRecover)
         flash('Hemos enviado un enlace de recuperación al correo electrónico proporcionado')
 
-    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,formRecoverPassword=formRecoverPassword,colorAlert=colorAlert )    
-    
+    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert ) 
+
+@app.route('/recoverPassword/<email>', methods=['GET','POST'])
+def recoverPassword(email):
+    title='Recuperar contraseña'
+    route = '/ Recuperar contraseña'
+    colorAlert = "alert-danger"
+    redirectLogin = False
+    formRecoverPassword = forms.recoverPasswordForm()
+    if(formRecoverPassword.validate_on_submit()):
+        newPassword = formRecoverPassword.password.data
+        confirmPassword = formRecoverPassword.confirmPassword.data
+
+        if newPassword == confirmPassword:
+            if not utils.isPasswordValid(newPassword):
+                flash('La contraseña debe contener al menos 8 caracteres una letra mayúscula, un número y un símbolo')
+            else:
+                con=sql.connect('database/MailTicDatabase.db')
+                cur=con.cursor()
+                verifyEmailRestore = cur.execute('select * from recoverPassword where email = ?', (email,)).fetchone()
+                if verifyEmailRestore is None:
+                    flash('Upss! Ha ocurrido un error debe solicitar un nuevo enlace de recuperación')
+                else:
+                    colorAlert = "alert-success"                   
+                    cur.execute( "update users set password = ? where email = ?", (generate_password_hash(newPassword),email) )
+                    con.commit()
+                    cur.execute( "delete from recoverPassword where email = ?", (email,) )
+                    con.commit()
+                    flash(Markup('Contraseña reestablecida correctamente. <br><a href="/" style="color:green"> <u><strong>Iniciar sesión </strong></u></a>'))
+                    return render_template('recoverPassword.html', title=title, route=route,formRecoverPassword=formRecoverPassword,colorAlert=colorAlert)
+        else:
+            flash('Las contraseñas no coinciden')
+
+    return render_template('recoverPassword.html', title=title, route=route,formRecoverPassword=formRecoverPassword,colorAlert=colorAlert)
+
 
 @app.route('/welcome')
 def welcome():
@@ -80,7 +123,6 @@ def newMessage():
         con=sql.connect('database/MailTicDatabase.db')
         cur=con.cursor()
         dirEmails = cur.execute('select distinct name, email from users').fetchall()
-        print(dirEmails)
         return render_template('newMessage.html', title=title, route=route, formMessage=formMessage, dirEmails=dirEmails)
     else:
         return 'unAuthorized'
@@ -127,6 +169,7 @@ def add_user():
     route = '/ Inicio'
     formLogin = forms.LoginForm()
     formRegister = forms.RegisterForm()
+    forgotPasswordForm = forms.forgotPasswordForm()
     if(formRegister.validate_on_submit() and request.method == 'POST'):
         try:
             name = formRegister.name.data
@@ -158,10 +201,10 @@ def add_user():
                     con.rollback()
                     flash('Upss ha ocurrido un error intente más tarde.')
                                     
-                return render_template('inicio.html', title=title, route=route, formRegister=formRegister,colorAlert=colorAlert )
+                return render_template('inicio.html', title=title, route=route, formRegister=formRegister, forgotPasswordForm=forgotPasswordForm, colorAlert=colorAlert )
         except:
-            return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,colorAlert=colorAlert )
-    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,colorAlert=colorAlert ) 
+            return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert )
+    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert ) 
 
 @app.route('/delete_msg/<idmsg>')
 def delete_msg(idmsg):
@@ -173,6 +216,11 @@ def delete_msg(idmsg):
         return redirect(url_for('messages'))
     else:
         return 'unAuthorized'
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 def login_reqeuired(view):
     @functools.wraps(view)

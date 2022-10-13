@@ -25,6 +25,12 @@ class NewMessageForm (FlaskForm):
     submitBtn = SubmitField('Enviar mensaje')
 
 
-class recoverPasswordForm (FlaskForm):
+class forgotPasswordForm (FlaskForm):
     email = EmailField('Correo electrónico', validators=[DataRequired(message = 'Debe ingresar un correo electrónico válido')])
-    submitBtn = SubmitField('    Enviar correo    ')        
+    submitBtn = SubmitField('    Enviar correo    ')  
+
+
+class recoverPasswordForm (FlaskForm):
+    password =PasswordField('Nueva contraseña')
+    confirmPassword = PasswordField('Confirmar contraseña')
+    submitRecover = SubmitField('Reestablecer contraseña') 

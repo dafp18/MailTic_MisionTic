@@ -6,28 +6,32 @@
             <div class="card-body">
                 <div class="comment-widgets scrollable">
                     <!-- Comment Row -->
-                    {% for msg in messages %}
-                    <div class="d-flex flex-row comment-row mt-0" style="padding: 0 !important" onclick="leerMessage('{{ msg[0] }}','{{ msg[1] }}','{{ msg[5] }}','{{ msg[3] }}','{{ msg[6] }}','{{ msg[2] }}')">
-                        <div class="comment-text w-100">
-                            <h6 class="font-medium">
-                                <strong class="notRead_{{ msg[0] }}">{{ msg[5] }} </strong>
-                                <p class="read_{{ msg[0] }}" style="display:none">{{ msg[5] }}</p>
-                                <i class="me-2 mdi mdi-email-outline float-end notRead_{{ msg[0] }}" style="font-size: 22px; margin-top: -6px;"></i>
-                            </h6>
-                            <span class="mb-3 d-block">
-                                <strong class="notRead_{{ msg[0] }}">{{ msg[2] }}...</strong>
-                                <p class="read_{{ msg[0] }}" style="display:none">{{ msg[2] }}...</p>
-                            </span>
-                            <div class="comment-footer">
-                                <span class="text-muted float-end">{{ msg[3] }}</span>
-                                <button type="button" class="btn btn-cyan btn-sm text-white" id="btn_leido_msg_{{ msg[0] }}" ><i class="fa fa-check me-1"></i> Leido</button>
-                                <a href="/delete_msg/{{ msg[0] }}"><button type="button" class="btn btn-danger btn-sm text-white"><i class="fa fa-trash-alt me-1"></i> Eliminar</button></a>
+                    {% if messages %}
+
+                        {% for msg in messages %}
+                        <div class="d-flex flex-row comment-row mt-0" style="padding: 0 !important" onclick="leerMessage('{{ msg[0] }}','{{ msg[1] }}','{{ msg[5] }}','{{ msg[3] }}','{{ msg[6] }}','{{ msg[2] }}')">
+                            <div class="comment-text w-100">
+                                <h6 class="font-medium">
+                                    <strong class="notRead_{{ msg[0] }}">{{ msg[5] }} </strong>
+                                    <p class="read_{{ msg[0] }}" style="display:none">{{ msg[5] }}</p>
+                                    <i class="me-2 mdi mdi-email-outline float-end notRead_{{ msg[0] }}" style="font-size: 22px; margin-top: -6px;"></i>
+                                </h6>
+                                <span class="mb-3 d-block">
+                                    <strong class="notRead_{{ msg[0] }}">{{ msg[2] }}...</strong>
+                                    <p class="read_{{ msg[0] }}" style="display:none">{{ msg[2] }}...</p>
+                                </span>
+                                <div class="comment-footer">
+                                    <span class="text-muted float-end">{{ msg[3] }}</span>
+                                    <button type="button" class="btn btn-cyan btn-sm text-white" id="btn_leido_msg_{{ msg[0] }}" ><i class="fa fa-check me-1"></i> Leido</button>
+                                    <a href="/delete_msg/{{ msg[0] }}"><button type="button" class="btn btn-danger btn-sm text-white"><i class="fa fa-trash-alt me-1"></i> Eliminar</button></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <hr>
-                    {%endfor%}
-                    
+                        <hr>
+                        {%endfor%}
+                    {% else %}
+                        <center><h4>No tiene mensajes</h4></center>
+                    {% endif %}
                 </div>
             </div>
         </div>
