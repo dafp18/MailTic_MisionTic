@@ -27,7 +27,7 @@ app.config['MAIL_USERNAME'] = MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
 mail = Mail()
 
-@app.route('/', methods=['GET','POST'], endpoint='login')
+@app.route('/', methods=['GET','POST'])
 def index():
     colorAlert = "alert-danger"
     title='Inicio'
