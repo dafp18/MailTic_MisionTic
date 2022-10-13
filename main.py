@@ -6,13 +6,26 @@ import os
 import forms
 import utils
 import random
-
+from flask_mail import Mail
+from flask_mail import Message
 
 SECRET_KEY = os.urandom(32)
+MAIL_SERVER = 'smtp-mail.outlook.com'
+MAIL_PORT = 587
+MAIL_USE_SSL = False
+MAIL_USE_TLS = True
+MAIL_USERNAME = 'pinzonad@uninorte.edu.co'
+MAIL_PASSWORD = 'Facil2022'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
-
+app.config['MAIL_SERVER'] = MAIL_SERVER
+app.config['MAIL_PORT'] = MAIL_PORT
+app.config['MAIL_USE_SSL'] = MAIL_USE_SSL
+app.config['MAIL_USE_TLS'] = MAIL_USE_TLS
+app.config['MAIL_USERNAME'] = MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = MAIL_PASSWORD
+mail = Mail()
 
 @app.route('/', methods=['GET','POST'], endpoint='login')
 def index():
@@ -28,13 +41,17 @@ def index():
         password = formLogin.password.data
         con=sql.connect('database/MailTicDatabase.db')
         cur=con.cursor()
-        user = cur.execute('select * from users where email = ? and password = ?', (email,password)).fetchone()
-        
+        user = cur.execute("select * from users where email = ? and password = ? and isActive = '1'", (email,password)).fetchone()
+
         if user is None:
             user = cur.execute('select * from users where email = ?', (email,)).fetchone()
             if user is None:
                 flash('El correo electrónico no existe')
             else:
+                if user[5] == '0':
+                    flash('Debe activar la cuenta para poder ingresar')
+                    return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert )
+                
                 pass_almacenado = user[3]
                 resultado = check_password_hash(pass_almacenado,password)
                 if resultado is False:
@@ -51,12 +68,12 @@ def index():
 
     return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert )    
     
-
 @app.route('/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():
     colorAlert = "alert-danger"
     title='Inicio'
     route = '/ Inicio'
+    origen = 'forgot_password'
     formLogin = forms.LoginForm()
     formRegister = forms.RegisterForm()
     forgotPasswordForm = forms.forgotPasswordForm()
@@ -67,6 +84,10 @@ def forgotPassword():
         cur=con.cursor()
         cur.execute('INSERT INTO recoverPassword ( email,code) values (?,?)', (emailRecover,random.randint(1000, 9999)))
         con.commit()
+
+        msg = Message('MailTic Recuperación de contraseña' , sender = app.config['MAIL_USERNAME'], recipients= [emailRecover])
+        msg.html = render_template('email.html', email=emailRecover, origen=origen)
+        mail.send(msg)
         flash('Hemos enviado un enlace de recuperación al correo electrónico proporcionado')
 
     return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert ) 
@@ -172,6 +193,7 @@ def add_user():
     forgotPasswordForm = forms.forgotPasswordForm()
     if(formRegister.validate_on_submit() and request.method == 'POST'):
         try:
+            origen = 'register_user'
             name = formRegister.name.data
             email = formRegister.email.data
             password = formRegister.password.data
@@ -189,22 +211,36 @@ def add_user():
                 if(password != confirmPassword):
                     error = 'Las contraseñas no coinciden'    
                     flash(error)
-            if not error:
+
+            if not error:          
                 colorAlert = "alert-success"
                 try:
                     with sql.connect("database/MailTicDatabase.db") as con:
                         cur = con.cursor()                       
                         cur.execute( "INSERT INTO users ( name,email,password,id_rol ) VALUES ( ?,?,?,? )", (name,email,generate_password_hash(password),1) )
                         con.commit()
+
+                        msg = Message('MailTic Bienvenido activemos tu cuenta!' , sender = app.config['MAIL_USERNAME'], recipients= [email])
+                        msg.html = render_template('email.html', email=email, origen=origen)
+                        mail.send(msg)
                         flash('Cuenta creada correctamente revisa tu correo para activarla.')
                 except:
                     con.rollback()
                     flash('Upss ha ocurrido un error intente más tarde.')
                                     
-                return render_template('inicio.html', title=title, route=route, formRegister=formRegister, forgotPasswordForm=forgotPasswordForm, colorAlert=colorAlert )
+                return render_template('inicio.html', title=title, route=route, formRegister=formRegister, forgotPasswordForm=forgotPasswordForm, colorAlert=colorAlert )    
         except:
             return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert )
     return render_template('inicio.html', title=title, route=route, formLogin=formLogin,formRegister=formRegister,forgotPasswordForm=forgotPasswordForm,colorAlert=colorAlert ) 
+
+@app.route('/activateAccount/<email>')
+def activateAccount(email):
+    con=sql.connect('database/MailTicDatabase.db')
+    cur=con.cursor()
+    cur.execute("update users set isActive = '1' where email = ? ", (email,))
+    con.commit()
+    return 'cuenta activada correctamente!' 
+
 
 @app.route('/delete_msg/<idmsg>')
 def delete_msg(idmsg):
@@ -232,5 +268,7 @@ def login_reqeuired(view):
     return wrapped_view
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':  
+    mail.init_app(app) 
     app.run(debug=True)
+    

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if origen == 'forgot_password' %}
+        <title>Recuperar contraseña</title>
+    {% else %}
+        <title>Activar cuenta</title>
+    {% endif %}
+</head>
+<body>
+    <h3>Hola !</h3>
+    {% if origen == 'forgot_password' %}
+        <h5>Reestablece tu contraseña en el siguiente enlace.</h5>
+        <a href="http://localhost:5000/recoverPassword/{{email}}">Reestablece tu contraseña</a>
+    {% else %}
+        <h5>MaiTic te da la bienvenida, para comenzar da click en el enlace a continuación para activar tu cuenta.</h5>
+        <a href="http://localhost:5000/activateAccount/{{email}}">Activa tu cuenta!</a>
+    {% endif %}
+</body>
+</html>
