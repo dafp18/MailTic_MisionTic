@@ -1,3 +1,4 @@
+from distutils.log import debug
 import functools
 from flask import Flask,request,render_template,flash, redirect, url_for, g, make_response, session, Markup
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -270,5 +271,5 @@ def login_reqeuired(view):
 
 if __name__ == '__main__':  
     mail.init_app(app) 
-    app.run()
+    app.run(debug=True)
     
